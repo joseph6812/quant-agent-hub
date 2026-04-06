@@ -131,7 +131,7 @@ export async function POST(request: Request) {
       requirements: body.requirements || null,
       readme: body.readme || null,
       config: body.config || null,
-      author_id: body.authorId || body.author_id || 'anonymous',
+      author_id: body.authorId || body.author_id || null,
       is_published: true,
       view_count: 0,
       download_count: 0,

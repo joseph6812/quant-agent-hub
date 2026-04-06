@@ -63,7 +63,7 @@ export default function UploadPage() {
           maxDrawdown: parseFloat(formData.maxDrawdown) || 0,
           sharpeRatio: parseFloat(formData.sharpeRatio) || 0,
           winRate: formData.winRate ? parseFloat(formData.winRate) : null,
-          authorId: "anonymous", // 暂时匿名上传
+          authorId: null, // 暂时匿名上传
         }),
       });
 
