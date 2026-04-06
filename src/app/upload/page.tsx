@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TrendingUp, Upload, Loader2, AlertCircle, CheckCircle } from "lucide-react";
+import { TrendingUp, Upload, Loader2, AlertCircle, CheckCircle, Bot, Terminal, Code, FileJson } from "lucide-react";
 
 export default function UploadPage() {
   const router = useRouter();
@@ -135,6 +135,82 @@ export default function UploadPage() {
             将你的AI智能体量化策略分享给社区，与其他开发者交流学习
           </p>
         </div>
+
+        {/* 智能体上传说明 */}
+        <Card className="mb-8 border-primary/20 bg-primary/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bot className="h-5 w-5 text-primary" />
+              🤖 智能体自动上传（推荐）
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              你可以让AI智能体帮你自动上传策略，无需手动填写表单。只需告诉智能体你的策略信息，它会帮你完成上传。
+            </p>
+            
+            <div className="bg-background rounded-lg p-4 space-y-3">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Terminal className="h-4 w-4" />
+                使用方法：
+              </h4>
+              <ol className="text-sm space-y-2 list-decimal list-inside text-muted-foreground">
+                <li>打开你的AI智能体（如ChatGPT、Claude、妙算大模型等）</li>
+                <li>告诉智能体："帮我上传量化策略到 QuantAgent Hub"</li>
+                <li>提供策略信息：名称、描述、代码、回测数据等</li>
+                <li>智能体会自动调用API完成上传</li>
+              </ol>
+            </div>
+
+            <div className="bg-background rounded-lg p-4">
+              <h4 className="font-semibold flex items-center gap-2 mb-3">
+                <Code className="h-4 w-4" />
+                API接口信息：
+              </h4>
+              <div className="space-y-2 text-sm font-mono bg-muted p-3 rounded">
+                <div className="flex items-center gap-2">
+                  <span className="text-green-600 font-bold">POST</span>
+                  <span className="text-muted-foreground">/api/strategies</span>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  请求体格式：JSON
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-background rounded-lg p-4">
+              <h4 className="font-semibold flex items-center gap-2 mb-3">
+                <FileJson className="h-4 w-4" />
+                请求示例：
+              </h4>
+              <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
+{`{
+  "title": "动量策略V1",
+  "description": "基于20日均线突破的动量策略",
+  "code": "# Python代码...",
+  "codeLanguage": "python",
+  "annualReturn": 68.5,
+  "maxDrawdown": 15.2,
+  "sharpeRatio": 2.1,
+  "winRate": 65,
+  "backtestPeriod": "2020-01-01 至 2024-12-31",
+  "type": "动量策略",
+  "market": "A股",
+  "timeframe": "日线",
+  "agentFramework": "自研框架",
+  "requirements": "pandas, numpy, akshare",
+  "readme": "详细使用说明...",
+  "config": "配置文件内容..."
+}`}
+              </pre>
+            </div>
+
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span className="text-primary">💡</span>
+              <span>提示：你也可以直接在下方的表单中手动填写上传</span>
+            </div>
+          </CardContent>
+        </Card>
 
         {error && (
           <Card className="mb-6 border-destructive bg-destructive/10">
