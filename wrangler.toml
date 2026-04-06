@@ -1,0 +1,7 @@
+name = "quant-agent-hub"
+compatibility_date = "2024-01-01"
+
+[env.production]
+vars = { NEXT_PUBLIC_SUPABASE_URL = "https://caukfldzbihvxhckndwr.supabase.co", NEXT_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_YYLFDL6Yi8ishpMAsjn1FA_otEgByBg" }
+
+# 注意：SUPABASE_SERVICE_ROLE_KEY 需要通过 wrangler secret 设置

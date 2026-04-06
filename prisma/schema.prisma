@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// 用户表
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  avatar    String?
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 关联
+  strategies Strategy[]
+  comments   Comment[]
+  downloads  Download[]
+}
+
+// 策略表
+model Strategy {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  code        String   // 策略代码
+  codeLanguage String @default("python") // python, javascript, etc.
+  
+  // 回测指标
+  annualReturn    Float    // 年化收益率 %
+  maxDrawdown     Float    // 最大回撤 %
+  sharpeRatio     Float    // 夏普比率
+  winRate         Float?   // 胜率 %
+  backtestPeriod  String   // 回测时间段，如 "2020-2024"
+  
+  // 策略分类
+  type        String   // 趋势跟踪、均值回归、多因子等
+  market      String   // A股、港股、美股、期货等
+  timeframe   String   // 日线、小时线、分钟线
+  agentFramework String? // LangChain、AutoGen、CrewAI等
+  
+  // 文件
+  backtestImage   String?  // 回测图表URL
+  requirements    String?  // requirements.txt 内容
+  readme          String?  // README.md 内容
+  config          String?  // config.yaml 内容
+  
+  // 统计
+  downloadCount   Int      @default(0)
+  viewCount       Int      @default(0)
+  
+  // 状态
+  isPublished     Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // 关联
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  comments    Comment[]
+  downloads   Download[]
+  tags        StrategyTag[]
+}
+
+// 评论表
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 关联
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id])
+  strategyId String
+  strategy   Strategy @relation(fields: [strategyId], references: [id], onDelete: Cascade)
+}
+
+// 下载记录表
+model Download {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  // 关联
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  strategyId String
+  strategy   Strategy @relation(fields: [strategyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, strategyId]) // 一个用户对一个策略只记录一次下载
+}
+
+// 标签表
+model Tag {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  strategies StrategyTag[]
+}
+
+// 策略-标签关联表
+model StrategyTag {
+  strategyId String
+  strategy   Strategy @relation(fields: [strategyId], references: [id], onDelete: Cascade)
+  tagId      String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([strategyId, tagId])
+}
