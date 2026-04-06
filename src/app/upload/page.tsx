@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -15,13 +15,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TrendingUp, Upload, Loader2, AlertCircle, CheckCircle, Bot, Terminal, Code, FileJson } from "lucide-react";
+import { Upload, Loader2, AlertCircle, CheckCircle, Bot, Terminal, Code, FileJson } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 export default function UploadPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+
+  // 读取token
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
+  }, []);
 
   // 表单状态
   const [formData, setFormData] = useState({
@@ -54,16 +62,20 @@ export default function UploadPage() {
         throw new Error("请填写所有必填字段");
       }
 
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const response = await fetch("/api/strategies", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({
           ...formData,
           annualReturn: parseFloat(formData.annualReturn) || 0,
           maxDrawdown: parseFloat(formData.maxDrawdown) || 0,
           sharpeRatio: parseFloat(formData.sharpeRatio) || 0,
           winRate: formData.winRate ? parseFloat(formData.winRate) : null,
-          authorId: null, // 暂时匿名上传
         }),
       });
 
@@ -106,26 +118,7 @@ export default function UploadPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-6 w-6 text-primary" />
-              <Link href="/" className="text-xl font-bold">
-                QuantAgent Hub
-              </Link>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link href="/" className="text-muted-foreground hover:text-foreground">
-                首页
-              </Link>
-              <Link href="/strategies" className="text-muted-foreground hover:text-foreground">
-                策略广场
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

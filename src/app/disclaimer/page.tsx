@@ -1,31 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code, AlertTriangle, Shield } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertTriangle, Shield } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 export default function DisclaimerPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* 导航栏 */}
-      <header className="border-b">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Code className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">QuantAgent Hub</span>
-          </Link>
-          <nav className="flex items-center gap-6">
-            <Link href="/strategies" className="text-sm font-medium hover:text-primary">
-              策略广场
-            </Link>
-            <Link href="/upload" className="text-sm font-medium hover:text-primary">
-              上传策略
-            </Link>
-            <Button variant="outline" size="sm">
-              登录
-            </Button>
-          </nav>
-        </div>
-      </header>
+      <Navbar />
 
       {/* 主要内容 */}
       <main className="container mx-auto px-4 py-12 max-w-3xl">

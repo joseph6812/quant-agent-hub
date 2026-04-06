@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,25 +10,40 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
-  TrendingUp,
   ArrowLeft,
   Download,
   Code,
-  FileText,
   MessageSquare,
   Calendar,
   Loader2,
   AlertCircle,
 } from "lucide-react";
 import type { Strategy, Comment } from "@/lib/database.types";
+import Navbar from "@/components/Navbar";
+import DeleteStrategyButton from "@/components/DeleteStrategyButton";
 
 export default function StrategyDetailPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
   const [strategy, setStrategy] = useState<Strategy | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [newComment, setNewComment] = useState("");
   const [submittingComment, setSubmittingComment] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{ id: string; isAdmin: boolean } | null>(null);
+
+  useEffect(() => {
+    // 读取当前用户信息
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setCurrentUser({ id: user.id, isAdmin: user.isAdmin });
+      } catch (e) {
+        console.error('Failed to parse user data');
+      }
+    }
+  }, []);
 
   useEffect(() => {
     loadStrategy();
@@ -141,29 +157,20 @@ export default function StrategyDetailPage({ params }: { params: { id: string } 
     );
   }
 
+  // 检查当前用户是否有权限删除此策略
+  const canDelete = currentUser && strategy && (
+    currentUser.isAdmin || currentUser.id === strategy.authorId
+  );
+
+  const handleDeleted = () => {
+    router.push('/strategies');
+    router.refresh();
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-6 w-6 text-primary" />
-              <Link href="/" className="text-xl font-bold">
-                QuantAgent Hub
-              </Link>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link href="/strategies" className="text-muted-foreground hover:text-foreground">
-                策略广场
-              </Link>
-              <Link href="/upload" className="text-muted-foreground hover:text-foreground">
-                分享策略
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -207,6 +214,15 @@ export default function StrategyDetailPage({ params }: { params: { id: string } 
                 下载策略
               </Button>
             </div>
+          </div>
+          <div className="flex items-center justify-end gap-4 mt-2">
+            {canDelete && (
+              <DeleteStrategyButton
+                strategyId={strategy.id}
+                strategyTitle={strategy.title}
+                onDeleted={handleDeleted}
+              />
+            )}
           </div>
         </div>
 

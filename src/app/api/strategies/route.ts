@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { getCurrentUser } from '@/lib/auth';
 
 // CORS headers for API access
 const corsHeaders = {
@@ -113,6 +114,12 @@ export async function POST(request: Request) {
       );
     }
 
+    // 获取当前登录用户
+    const currentUser = await getCurrentUser(request);
+    
+    // 如果提供了token，使用token中的用户ID；否则使用body中的authorId或null
+    const authorId = currentUser?.userId || body.authorId || body.author_id || null;
+
     // 准备插入数据
     const insertData = {
       title: body.title,
@@ -131,7 +138,7 @@ export async function POST(request: Request) {
       requirements: body.requirements || null,
       readme: body.readme || null,
       config: body.config || null,
-      author_id: body.authorId || body.author_id || null,
+      author_id: authorId,
       is_published: true,
       view_count: 0,
       download_count: 0,

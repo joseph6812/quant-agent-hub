@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, Download, Shield, AlertTriangle } from "lucide-react";
 import { getStrategies } from "@/lib/api";
+import Navbar from "@/components/Navbar";
 
 export const revalidate = 60; // 每分钟重新验证数据
 
@@ -15,27 +16,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="border-b bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold">QuantAgent Hub</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link href="/strategies" className="text-muted-foreground hover:text-foreground">
-                策略广场
-              </Link>
-              <Link href="/upload" className="text-muted-foreground hover:text-foreground">
-                分享策略
-              </Link>
-              <Link href="/disclaimer" className="text-sm text-muted-foreground hover:text-foreground">
-                免责声明
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="py-20 px-4">

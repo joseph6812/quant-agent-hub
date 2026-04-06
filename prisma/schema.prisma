@@ -7,17 +7,17 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 // 用户表
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
+  password  String   // 加密后的密码
   name      String?
   avatar    String?
   bio       String?
+  isAdmin   Boolean  @default(false)  // 管理员可删除任何策略
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

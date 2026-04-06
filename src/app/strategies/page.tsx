@@ -13,8 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, TrendingUp, Filter, Loader2 } from "lucide-react";
+import { Search, Filter, Loader2 } from "lucide-react";
 import type { Strategy } from "@/lib/database.types";
+import Navbar from "@/components/Navbar";
 
 export default function StrategiesPage() {
   const [strategies, setStrategies] = useState<Strategy[]>([]);
@@ -110,26 +111,7 @@ export default function StrategiesPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-6 w-6 text-primary" />
-              <Link href="/" className="text-xl font-bold">
-                QuantAgent Hub
-              </Link>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link href="/" className="text-muted-foreground hover:text-foreground">
-                首页
-              </Link>
-              <Link href="/upload" className="text-muted-foreground hover:text-foreground">
-                分享策略
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
