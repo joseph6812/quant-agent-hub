@@ -10,4 +10,11 @@ const cleanEnvVar = (value: string | undefined): string => {
 const supabaseUrl = cleanEnvVar(process.env.NEXT_PUBLIC_SUPABASE_URL)
 const supabaseKey = cleanEnvVar(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+// 验证环境变量
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Supabase environment variables are missing:')
+  console.error('NEXT_PUBLIC_SUPABASE_URL:', supabaseUrl ? 'Set' : 'Missing')
+  console.error('NEXT_PUBLIC_SUPABASE_ANON_KEY:', supabaseKey ? 'Set' : 'Missing')
+}
+
+export const supabase = createClient(supabaseUrl || '', supabaseKey || '')

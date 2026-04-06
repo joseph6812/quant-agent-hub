@@ -137,6 +137,14 @@ export async function POST(request: Request) {
       download_count: 0,
     };
     
+    // 检查Supabase连接
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      return NextResponse.json(
+        { error: 'Server configuration error', details: 'Missing Supabase configuration' }, 
+        { status: 500, headers: corsHeaders }
+      );
+    }
+
     const { data, error } = await supabase
       .from('strategies')
       .insert([insertData])
@@ -146,7 +154,12 @@ export async function POST(request: Request) {
     if (error) {
       console.error('Error creating strategy:', error);
       return NextResponse.json(
-        { error: 'Failed to create strategy', details: error.message }, 
+        { 
+          error: 'Failed to create strategy', 
+          details: error.message,
+          code: error.code,
+          hint: '可能是Supabase RLS策略阻止了插入，请检查数据库权限设置'
+        }, 
         { status: 500, headers: corsHeaders }
       );
     }
