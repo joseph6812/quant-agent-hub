@@ -248,7 +248,7 @@ export default function StrategiesPage() {
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    by {strategy.author?.name || "匿名用户"}
+                    by 匿名用户
                   </p>
                 </CardHeader>
                 <CardContent>

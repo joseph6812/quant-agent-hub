@@ -183,11 +183,9 @@ export default function StrategyDetailPage({ params }: { params: { id: string } 
               <div className="flex items-center gap-4 text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-6 w-6">
-                    <AvatarFallback>
-                      {strategy.author?.name?.[0] || "A"}
-                    </AvatarFallback>
+                    <AvatarFallback>A</AvatarFallback>
                   </Avatar>
-                  <span>{strategy.author?.name || "匿名用户"}</span>
+                  <span>匿名用户</span>
                 </div>
                 <span>·</span>
                 <div className="flex items-center gap-1">
@@ -360,12 +358,10 @@ export default function StrategyDetailPage({ params }: { params: { id: string } 
                       <div key={comment.id} className="border-b pb-4 last:border-0">
                         <div className="flex items-center gap-2 mb-2">
                           <Avatar className="h-8 w-8">
-                            <AvatarFallback>
-                              {comment.author?.name?.[0] || "U"}
-                            </AvatarFallback>
+                            <AvatarFallback>U</AvatarFallback>
                           </Avatar>
                           <span className="font-medium">
-                            {comment.author?.name || "匿名用户"}
+                            匿名用户
                           </span>
                           <span className="text-muted-foreground text-sm">
                             {new Date(comment.createdAt).toLocaleDateString("zh-CN")}

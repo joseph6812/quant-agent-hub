@@ -10,11 +10,8 @@ export async function getStrategies(options?: {
 }): Promise<Strategy[]> {
   let query = supabase
     .from('strategies')
-    .select(`
-      *,
-      author:authorId (id, name, avatar)
-    `)
-    .eq('isPublished', true)
+    .select('*')
+    .eq('is_published', true)
 
   // 筛选
   if (options?.type) {
@@ -27,17 +24,17 @@ export async function getStrategies(options?: {
   // 排序
   switch (options?.sortBy) {
     case 'popular':
-      query = query.order('downloadCount', { ascending: false })
+      query = query.order('download_count', { ascending: false })
       break
     case 'return':
-      query = query.order('annualReturn', { ascending: false })
+      query = query.order('annual_return', { ascending: false })
       break
     case 'sharpe':
-      query = query.order('sharpeRatio', { ascending: false })
+      query = query.order('sharpe_ratio', { ascending: false })
       break
     case 'newest':
     default:
-      query = query.order('createdAt', { ascending: false })
+      query = query.order('created_at', { ascending: false })
   }
 
   // 限制数量
@@ -59,10 +56,7 @@ export async function getStrategies(options?: {
 export async function getStrategy(id: string): Promise<Strategy | null> {
   const { data, error } = await supabase
     .from('strategies')
-    .select(`
-      *,
-      author:authorId (id, name, avatar)
-    `)
+    .select('*')
     .eq('id', id)
     .single()
 
@@ -74,7 +68,7 @@ export async function getStrategy(id: string): Promise<Strategy | null> {
   // 增加浏览量
   await supabase
     .from('strategies')
-    .update({ viewCount: (data.viewCount || 0) + 1 })
+    .update({ view_count: (data.view_count || 0) + 1 })
     .eq('id', id)
 
   return data as Strategy
@@ -90,8 +84,8 @@ export async function createStrategy(
     .insert([
       {
         ...input,
-        authorId,
-        isPublished: true,
+        author_id: authorId,
+        is_published: true,
       },
     ])
     .select()
@@ -109,12 +103,9 @@ export async function createStrategy(
 export async function getComments(strategyId: string): Promise<Comment[]> {
   const { data, error } = await supabase
     .from('comments')
-    .select(`
-      *,
-      author:authorId (id, name, avatar)
-    `)
-    .eq('strategyId', strategyId)
-    .order('createdAt', { ascending: false })
+    .select('*')
+    .eq('strategy_id', strategyId)
+    .order('created_at', { ascending: false })
 
   if (error) {
     console.error('Error fetching comments:', error)
@@ -135,8 +126,8 @@ export async function createComment(
     .insert([
       {
         content,
-        strategyId,
-        authorId,
+        strategy_id: strategyId,
+        author_id: authorId,
       },
     ])
     .select()
@@ -159,30 +150,30 @@ export async function recordDownload(
   const { data: existing } = await supabase
     .from('downloads')
     .select('id')
-    .eq('strategyId', strategyId)
-    .eq('userId', userId)
+    .eq('strategy_id', strategyId)
+    .eq('user_id', userId)
     .single()
 
   if (!existing) {
     // 记录下载
     await supabase.from('downloads').insert([
       {
-        strategyId,
-        userId,
+        strategy_id: strategyId,
+        user_id: userId,
       },
     ])
 
     // 增加下载计数
     const { data: strategy } = await supabase
       .from('strategies')
-      .select('downloadCount')
+      .select('download_count')
       .eq('id', strategyId)
       .single()
 
     if (strategy) {
       await supabase
         .from('strategies')
-        .update({ downloadCount: strategy.downloadCount + 1 })
+        .update({ download_count: strategy.download_count + 1 })
         .eq('id', strategyId)
     }
   }
@@ -192,13 +183,10 @@ export async function recordDownload(
 export async function searchStrategies(keyword: string): Promise<Strategy[]> {
   const { data, error } = await supabase
     .from('strategies')
-    .select(`
-      *,
-      author:authorId (id, name, avatar)
-    `)
-    .eq('isPublished', true)
+    .select('*')
+    .eq('is_published', true)
     .or(`title.ilike.%${keyword}%,description.ilike.%${keyword}%`)
-    .order('createdAt', { ascending: false })
+    .order('created_at', { ascending: false })
 
   if (error) {
     console.error('Error searching strategies:', error)

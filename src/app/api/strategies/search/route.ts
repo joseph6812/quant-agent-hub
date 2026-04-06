@@ -11,10 +11,7 @@ export async function GET(request: Request) {
 
   const { data, error } = await supabase
     .from('strategies')
-    .select(`
-      *,
-      author:author_id (id, name, avatar)
-    `)
+    .select('*')
     .eq('is_published', true)
     .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
     .order('created_at', { ascending: false });
@@ -50,7 +47,6 @@ export async function GET(request: Request) {
     createdAt: item.created_at,
     updatedAt: item.updated_at,
     authorId: item.author_id,
-    author: item.author,
   }));
 
   return NextResponse.json({ strategies });

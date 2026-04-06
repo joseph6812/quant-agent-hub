@@ -10,10 +10,7 @@ export async function GET(
   // 获取策略详情
   const { data: strategy, error } = await supabase
     .from('strategies')
-    .select(`
-      *,
-      author:author_id (id, name, avatar)
-    `)
+    .select('*')
     .eq('id', id)
     .single();
 
@@ -31,10 +28,7 @@ export async function GET(
   // 获取评论
   const { data: comments } = await supabase
     .from('comments')
-    .select(`
-      *,
-      author:author_id (id, name, avatar)
-    `)
+    .select('*')
     .eq('strategy_id', id)
     .order('created_at', { ascending: false });
 
@@ -64,7 +58,6 @@ export async function GET(
     createdAt: strategy.created_at,
     updatedAt: strategy.updated_at,
     authorId: strategy.author_id,
-    author: strategy.author,
   };
 
   const formattedComments = (comments || []).map((item: any) => ({
@@ -73,7 +66,6 @@ export async function GET(
     createdAt: item.created_at,
     authorId: item.author_id,
     strategyId: item.strategy_id,
-    author: item.author,
   }));
 
   return NextResponse.json({ 

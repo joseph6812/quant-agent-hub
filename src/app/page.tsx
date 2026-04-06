@@ -129,7 +129,7 @@ export default async function Home() {
                         {strategy.annualReturn > 0 ? '+' : ''}{strategy.annualReturn}%
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">by {strategy.author?.name || '匿名用户'}</p>
+                    <p className="text-sm text-muted-foreground">by 匿名用户</p>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
@@ -184,7 +184,7 @@ export default async function Home() {
                         {strategy.annualReturn > 0 ? '+' : ''}{strategy.annualReturn}%
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">by {strategy.author?.name || '匿名用户'}</p>
+                    <p className="text-sm text-muted-foreground">by 匿名用户</p>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground mb-4 line-clamp-2">

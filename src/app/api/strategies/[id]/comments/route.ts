@@ -27,10 +27,7 @@ export async function POST(
           author_id: authorId,
         },
       ])
-      .select(`
-        *,
-        author:author_id (id, name, avatar)
-      `)
+      .select('*')
       .single();
 
     if (error) {
@@ -48,7 +45,6 @@ export async function POST(
       createdAt: data.created_at,
       authorId: data.author_id,
       strategyId: data.strategy_id,
-      author: data.author,
     };
 
     return NextResponse.json({ comment: formattedComment });

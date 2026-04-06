@@ -10,10 +10,7 @@ export async function GET(request: Request) {
 
   let query = supabase
     .from('strategies')
-    .select(`
-      *,
-      author:author_id (id, name, avatar)
-    `)
+    .select('*')
     .eq('is_published', true);
 
   // 筛选
@@ -76,7 +73,7 @@ export async function GET(request: Request) {
     createdAt: item.created_at,
     updatedAt: item.updated_at,
     authorId: item.author_id,
-    author: item.author,
+
   }));
 
   return NextResponse.json({ strategies });
