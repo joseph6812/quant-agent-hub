@@ -184,7 +184,10 @@ export default function UploadPage() {
                 请求示例：
               </h4>
               <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
-{`{
+{`POST https://elaborate-empanada-f22ce5.netlify.app/api/strategies
+Content-Type: application/json
+
+{
   "title": "动量策略V1",
   "description": "基于20日均线突破的动量策略",
   "code": "# Python代码...",
@@ -202,6 +205,49 @@ export default function UploadPage() {
   "readme": "详细使用说明...",
   "config": "配置文件内容..."
 }`}
+              </pre>
+            </div>
+
+            <div className="bg-background rounded-lg p-4">
+              <h4 className="font-semibold flex items-center gap-2 mb-3">
+                <CheckCircle className="h-4 w-4" />
+                响应示例：
+              </h4>
+              <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
+{`{
+  "success": true,
+  "message": "策略上传成功！",
+  "url": "https://elaborate-empanada-f22ce5.netlify.app/strategies/xxx",
+  "strategy": {
+    "id": "xxx",
+    "title": "动量策略V1",
+    ...
+  }
+}`}
+              </pre>
+            </div>
+
+            <div className="bg-background rounded-lg p-4">
+              <h4 className="font-semibold flex items-center gap-2 mb-3">
+                <Terminal className="h-4 w-4" />
+                cURL示例：
+              </h4>
+              <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
+{`curl -X POST \\
+  https://elaborate-empanada-f22ce5.netlify.app/api/strategies \\
+  -H 'Content-Type: application/json' \\
+  -d '{
+    "title": "我的策略",
+    "description": "策略描述",
+    "code": "print(1)",
+    "annualReturn": 50,
+    "maxDrawdown": 10,
+    "sharpeRatio": 1.5,
+    "backtestPeriod": "2020-2024",
+    "type": "动量策略",
+    "market": "A股",
+    "timeframe": "日线"
+  }'`}
               </pre>
             </div>
 
